@@ -1,94 +1,52 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Console — root@machine</title>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>root@neon-node — console</title>
 <style>
-  :root{
-    --bg:#071008;
-    --panel:#020602;
-    --green:#4dfb7b;
-    --dimgreen:#26c36a;
-    --muted:#4bff92;
-    --shadow: 0 6px 20px rgba(0,255,120,0.06);
-    --glass: rgba(255,255,255,0.02);
-  }
-  html,body{height:100%;margin:0;font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Courier New", monospace;background:
-    linear-gradient(180deg,#000814 0%, #001219 100%);}
-  .wrap{
-    display:flex;align-items:center;justify-content:center;height:100%;padding:20px;
-  }
-  .console {
-    width:100%; max-width:1100px; height:78vh;
-    background: linear-gradient(180deg, rgba(0,10,0,0.65), rgba(0,0,0,0.65));
-    border-radius:10px; padding:18px; box-sizing:border-box;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.7);
-    border: 1px solid rgba(75,255,146,0.06);
-    display:flex; flex-direction:column; overflow:hidden;
-  }
-
-  /* header */
-  .topbar { display:flex; align-items:center; gap:12px; padding:6px 10px; margin-bottom:8px; }
-  .dots { display:flex; gap:8px; }
-  .dot { width:12px; height:12px; border-radius:50%; box-shadow: 0 1px 2px rgba(0,0,0,0.6); }
-  .dot.red{ background: #ff5f56 } .dot.yellow{ background:#ffbd2e } .dot.green{ background:#27c93f }
-  .title { flex:1; text-align:center; color:var(--muted); font-weight:700; letter-spacing:1px; font-size:14px; }
-  .controls { font-size:13px; color:#89ffb6; display:flex; gap:10px; align-items:center; }
-
-  /* main area */
-  .screen {
-    background: radial-gradient(ellipse at 10% 10%, rgba(0,120,60,0.03), transparent 10%),
-                linear-gradient(180deg, rgba(0,0,0,0.25), rgba(0,0,0,0.4));
-    flex:1; border-radius:6px; padding:12px; overflow:auto; box-shadow:var(--shadow);
-    border:1px solid rgba(45,255,160,0.03);
-  }
-
-  .line { color:var(--green); font-size:13px; line-height:1.35; white-space:pre-wrap; word-break:break-word }
-  .muted { color:rgba(77,251,123,0.6) }
-  .accent { color:var(--dimgreen); font-weight:700 }
-  .error { color:#ff6b6b }
-  .js-snippet {
-    display:block; background:rgba(0,0,0,0.45); border-left:3px solid rgba(77,251,123,0.18);
-    padding:10px 12px; margin:8px 0;border-radius:6px;color:#b9f6c8;
-  }
-  .js-key { color:#8affb9; font-weight:700 }
-  .js-str { color:#c2ffdd }
-  .js-fn { color:#9df0b3 }
-
-  /* input area */
-  .prompt {
-    display:flex; gap:10px; align-items:center; padding-top:10px;
-  }
-  .prompt .user { color:var(--muted); min-width:140px; text-align:left; font-size:13px; }
-  .input-wrap { flex:1; position:relative; display:flex; }
-  .cmd {
-    width:100%; background:transparent; border:none; color:var(--green); font-size:14px; outline:none;
-    caret-color: #a7ffd0; padding:8px 10px; border-radius:6px; box-sizing:border-box;
-    box-shadow: inset 0 0 0 1px rgba(0,255,120,0.02);
-  }
-  .hint { position:absolute; right:8px; top:50%; transform:translateY(-50%); color:rgba(140,255,170,0.3); font-size:12px; pointer-events:none; }
-
-  /* small toolbar */
-  .toolbar { display:flex; gap:8px; margin-top:10px; align-items:center; }
-  .btn {
-    background:linear-gradient(180deg,#062913,#09321b); border:1px solid rgba(75,255,146,0.06);
-    color:#baffc3; padding:8px 10px; border-radius:8px; cursor:pointer; font-size:13px;
-    box-shadow: 0 6px 18px rgba(0,0,0,0.6);
-  }
-  .btn.secondary { background:transparent; border:1px solid rgba(255,255,255,0.04); color:rgba(150,255,180,0.8) }
-  .btn:active { transform:translateY(1px) }
-
-  /* small UI niceties */
-  .tiny { font-size:12px; color:rgba(150,255,180,0.7) }
-  .kbd { background:#051309; border:1px solid rgba(0,255,120,0.06); padding:4px 8px; border-radius:6px; color:#9fffbf; font-size:12px; }
-
-  /* fake CRT scanlines */
-  .screen::before {
-    content:""; position: absolute; pointer-events:none;
-    top:0; left:0; right:0; bottom:0; opacity:0.02; background-image: linear-gradient(transparent 92%, rgba(0,0,0,0.06) 93%); mix-blend-mode:overlay;
-  }
-
+:root{
+  --bg:#030809; --panel:#07110a; --green:#6cff9e; --muted:#3fd087; --accent:#1be06b;
+  --dim: rgba(110,255,170,0.12);
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono","Courier New",monospace;background:
+  radial-gradient(circle at 10% 10%, #00110b, #000000 40%), linear-gradient(180deg,#001318 0%, #001218 100%);}
+.wrap{display:flex;align-items:center;justify-content:center;height:100%;padding:18px}
+.console{width:100%;max-width:1200px;height:80vh;background:linear-gradient(180deg, rgba(0,10,0,0.55), rgba(0,0,0,0.5));border-radius:10px;padding:14px;display:flex;flex-direction:column;border:1px solid rgba(80,255,160,0.06);overflow:hidden;box-shadow:0 18px 60px rgba(0,0,0,0.7)}
+.topbar{display:flex;align-items:center;gap:12px;padding:6px 10px;margin-bottom:10px}
+.dots{display:flex;gap:8px}
+.dot{width:12px;height:12px;border-radius:50%}
+.dot.red{background:#ff5f56}.dot.yellow{background:#ffbd2e}.dot.green{background:#27c93f}
+.title{flex:1;text-align:center;color:var(--muted);font-weight:700;letter-spacing:1px;font-size:13px}
+.controls{font-size:12px;color:#aef7c9;display:flex;gap:10px;align-items:center}
+.screen{flex:1;background:linear-gradient(180deg, rgba(0,0,0,0.18), rgba(0,0,0,0.22));border-radius:6px;padding:12px;overflow:auto;position:relative;border:1px solid rgba(60,255,150,0.03)}
+.screen::before{content:"";position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(transparent 92%, rgba(0,0,0,0.06) 93%);opacity:0.02}
+.line{color:var(--green);font-size:13px;line-height:1.35;white-space:pre-wrap;word-break:break-word;margin:2px 0}
+.muted{color:rgba(110,255,170,0.55)}
+.accent{color:var(--accent);font-weight:700}
+.error{color:#ff6b6b}
+.ts{color:rgba(160,255,200,0.35);font-size:11px;margin-right:8px}
+.js-snippet{display:block;background:rgba(0,0,0,0.46);border-left:3px solid rgba(110,255,170,0.15);padding:10px 12px;margin:8px 0;border-radius:6px;color:#cfffdd}
+.js-key{color:#8affb9;font-weight:700}
+.js-str{color:#d7ffdf}
+.js-fn{color:#9df0b3}
+.prompt{display:flex;gap:10px;align-items:center;padding-top:10px}
+.prompt .user{color:var(--muted);min-width:150px;text-align:left;font-size:13px}
+.input-wrap{flex:1;position:relative;display:flex}
+.cmd{width:100%;background:transparent;border:none;color:var(--green);font-size:14px;outline:none;caret-color:#a7ffd0;padding:8px 10px;border-radius:6px}
+.hint{position:absolute;right:8px;top:50%;transform:translateY(-50%);color:rgba(140,255,170,0.18);font-size:12px;pointer-events:none}
+.toolbar{display:flex;gap:8px;margin-top:10px;align-items:center}
+.btn{background:linear-gradient(180deg,#062913,#09321b);border:1px solid rgba(75,255,146,0.06);color:#baffc3;padding:8px 10px;border-radius:8px;cursor:pointer;font-size:13px}
+.btn.secondary{background:transparent;border:1px solid rgba(255,255,255,0.04);color:rgba(150,255,180,0.8)}
+.btn:active{transform:translateY(1px)}
+.tiny{font-size:12px;color:rgba(150,255,180,0.7)}
+.kbd{background:#051309;border:1px solid rgba(0,255,120,0.06);padding:4px 8px;border-radius:6px;color:#9fffbf;font-size:12px}
+.suggestion{display:inline-block;padding:6px 8px;margin:6px 6px 0 0;border-radius:6px;background:rgba(0,0,0,0.35);border:1px solid rgba(110,255,170,0.04);color:var(--green);cursor:pointer}
+.progressline{height:10px;background:linear-gradient(90deg,#08240f,#0a2d15);border-radius:6px;overflow:hidden;margin-top:8px}
+.progress{height:100%;background:linear-gradient(90deg,#26c36a,#6cff9e);width:0%;transition:width 200ms linear}
+.footer{position:fixed;bottom:8px;width:100%;text-align:center;font-size:12px;color:rgba(255,255,255,0.6)}
+@media (max-width:900px){.console{height:88vh}.title{display:none}.prompt .user{min-width:110px}.sidebar{display:none}}
 </style>
 </head>
 <body>
@@ -97,7 +55,7 @@
     <div class="topbar">
       <div class="dots"><div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div></div>
       <div class="title">root@neon-node — /dev/terminal</div>
-      <div class="controls tiny">green-console • v1.0</div>
+      <div class="controls tiny">green-console • v2.0</div>
     </div>
 
     <div id="screen" class="screen" tabindex="0" aria-live="polite"></div>
@@ -105,20 +63,23 @@
     <div class="prompt" aria-hidden="false">
       <div class="user">root@host:~$</div>
       <div class="input-wrap">
-        <input id="cmdInput" class="cmd" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="type a command — try `help`" />
-        <div class="hint">press ↵ to execute</div>
+        <input id="cmdInput" class="cmd" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="type command — try `help`"/>
+        <div class="hint">↵ execute • ↑ history</div>
       </div>
     </div>
 
     <div class="toolbar">
       <button class="btn" id="helpBtn">Help</button>
       <button class="btn secondary" id="copySnippetBtn">Copy JS Snippet</button>
-      <button class="btn secondary" id="fastBtn">Fast Output: OFF</button>
+      <button class="btn secondary" id="fastBtn">Fast: OFF</button>
+      <button class="btn secondary" id="demoBtn">Run Demo</button>
       <div style="flex:1"></div>
-      <div class="tiny">Tip: type <span class="kbd">js hello</span> to insert text into JS</div>
+      <div class="tiny">Tip: <span class="kbd">js "text"</span> then <span class="kbd">run</span></div>
     </div>
   </div>
 </div>
+
+<div class="footer">© DaBaconKid 2025</div>
 
 <script>
 (() => {
@@ -127,186 +88,254 @@
   const helpBtn = document.getElementById('helpBtn');
   const copyBtn = document.getElementById('copySnippetBtn');
   const fastBtn = document.getElementById('fastBtn');
+  const demoBtn = document.getElementById('demoBtn');
 
-  // State
-  let history = [];
-  let histPos = -1;
+  // state
+  let history = [], histPos = -1;
   let fastMode = false;
-  let currentSnippet = { varName: 'secret', value: 'top-secret' };
+  let currentSnippet = { varName: 'secret', value: 'pwned_by_you' };
+  let cmdRegistry = {};
 
-  // Utilities
-  function appendLine(text = '', cls='line', delay=0){
-    const el = document.createElement('div');
-    el.className = cls;
-    el.textContent = text;
-    if(fastMode || delay<=0){
-      screen.appendChild(el);
-      screen.scrollTop = screen.scrollHeight;
-    } else {
-      setTimeout(()=>{ screen.appendChild(el); screen.scrollTop = screen.scrollHeight }, delay);
-    }
+  // utilities
+  function appendHtml(html, cls='line', delay=0){
+    const el = document.createElement('div'); el.className = cls; el.innerHTML = html;
+    if(fastMode || delay<=0){ screen.appendChild(el); screen.scrollTop = screen.scrollHeight; }
+    else setTimeout(()=>{ screen.appendChild(el); screen.scrollTop = screen.scrollHeight }, delay);
     return el;
   }
+  function appendText(text, cls='line', delay=0){
+    return appendHtml(escapeHtml(text), cls, delay);
+  }
+  function ts(){ return `<span class="ts">[${new Date().toLocaleTimeString()}]</span> `; }
+  function escapeHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;'); }
 
-  function appendHtml(html, cls='line', delay=0){
-    const el = document.createElement('div');
-    el.className = cls;
-    el.innerHTML = html;
-    if(fastMode || delay<=0){ screen.appendChild(el); screen.scrollTop = screen.scrollHeight; }
-    else { setTimeout(()=>{ screen.appendChild(el); screen.scrollTop = screen.scrollHeight }, delay); }
-    return el;
+  function progressBar(totalMs=800){
+    const wrap = document.createElement('div'); wrap.className='progressline';
+    const bar = document.createElement('div'); bar.className='progress'; wrap.appendChild(bar);
+    screen.appendChild(wrap); screen.scrollTop = screen.scrollHeight;
+    const start = Date.now();
+    const tick = setInterval(()=>{ let p = (Date.now()-start)/totalMs*100; bar.style.width = Math.min(p,100)+'%'; if(p>=100) clearInterval(tick); }, 40);
+    return new Promise(res=>setTimeout(()=>{ bar.style.width='100%'; setTimeout(()=>res(),120); }, totalMs));
   }
 
   function sleep(ms){ return new Promise(res=>setTimeout(res, fastMode?10:ms)); }
+  async function typeOut(text, cls='line', speed=6){
+    const el = document.createElement('div'); el.className=cls; screen.appendChild(el);
+    for(let i=0;i<text.length;i++){ el.textContent += text[i]; await sleep(speed + Math.random()*speed); }
+    screen.scrollTop = screen.scrollHeight; return el;
+  }
 
-  // Fake typing effect
-  async function typeOut(text, cls='line', speed=8){
-    const el = document.createElement('div');
-    el.className = cls;
-    screen.appendChild(el);
-    screen.scrollTop = screen.scrollHeight;
-    for(let i=0;i<text.length;i++){
-      el.textContent += text[i];
-      await sleep(speed + (Math.random()*speed));
+  // snippet rendering
+  function renderSnippetInline(){
+    const html = `<div class="js-snippet"><span class="js-key">const</span> <span class="js-fn">${escapeHtml(currentSnippet.varName)}</span> = <span class="js-str">"${escapeHtml(currentSnippet.value)}"</span>;</div>`;
+    appendHtml(html,'line');
+  }
+
+  // command helpers
+  function register(name, fn, meta={}){
+    cmdRegistry[name] = { fn, meta };
+  }
+
+  // ---- core commands (many of them) ----
+  register('help', async (args) => {
+    if(args[0]){ // help on specific command
+      const cmd = args[0];
+      if(cmdRegistry[cmd]) appendHtml(`<span class="muted">${escapeHtml(cmd)} — ${escapeHtml(cmdRegistry[cmd].meta.desc || 'No description')}</span>`);
+      else appendHtml(`<span class="error">No such command: ${escapeHtml(cmd)}</span>`);
+      return;
     }
-    screen.scrollTop = screen.scrollHeight;
-    return el;
-  }
+    const cmds = Object.keys(cmdRegistry).sort();
+    appendHtml('<span class="muted">Available commands: ' + cmds.join(', ') + '</span>');
+    appendHtml('<span class="muted">Type <span class="kbd">help &lt;cmd&gt;</span> for details.</span>');
+  }, { desc: 'Show available commands' });
 
-  // Pretty JS snippet render that updates when currentSnippet changes
-  function renderSnippet(){
-    const html =
-      `<div class="js-snippet"><span class="js-key">const</span> <span class="js-fn">${escapeHtml(currentSnippet.varName)}</span> = <span class="js-str">"${escapeHtml(currentSnippet.value)}"</span>;\n` +
-      `<span class="muted">// run: type <span class="kbd">run</span></span></div>`;
-    appendHtml(html, 'line');
-  }
+  register('clear', async ()=>{ screen.innerHTML = ''; });
 
-  function escapeHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  register('echo', async (args)=>{ appendHtml(escapeHtml(args.join(' ')),'line'); }, { desc:'Echo text' });
 
-  // Fake system intro
-  async function intro(){
-    screen.innerHTML = '';
-    await typeOut('Initializing neon-node console v1.0...', 'line', 6);
-    await sleep(300);
-    await typeOut('Loading secure modules: [ ██████████████ ] 100%', 'line', 6);
-    await sleep(250);
-    appendLine('Welcome, operator. Type help to see commands.', 'muted');
-    renderSnippet();
-  }
-
-  // Command handlers
-  async function cmd_help(){
-    appendHtml('<span class="muted">Available commands: help, scan, connect, dump, encrypt, js &lt;word&gt;, run, clear, exit</span>');
-    appendHtml('<span class="muted">Examples: <span class="kbd">js password123</span>  <span class="kbd">run</span>  <span class="kbd">scan</span></span>');
-  }
-
-  async function cmd_scan(){
-    await typeOut('Scanning network interfaces...', 'line', 7);
-    await sleep(300);
-    await typeOut('Found hosts: 3', 'muted', 6);
-    await sleep(200);
-    appendHtml('<span class="muted">[192.168.0.4]</span>');
-    appendHtml('<span class="muted">[10.0.1.12]</span>');
-    appendHtml('<span class="muted">[172.16.254.1]</span>');
-  }
-
-  async function cmd_connect(){
-    await typeOut('Attempting connection to 10.0.1.12:22 ...', 'line', 7);
-    await sleep(500);
-    await typeOut('SSH handshake complete. Authentication bypassed (simulation).', 'muted', 7);
-    await sleep(200);
-    appendHtml('<span class="muted">session@10.0.1.12$</span>');
-  }
-
-  async function cmd_dump(){
-    await typeOut('Querying memory dump...', 'line', 8);
-    await sleep(400);
-    await typeOut('Dumping block 0x' + Math.floor(Math.random()*1e8).toString(16), 'muted', 7);
-    await sleep(200);
-    appendHtml('<span class="muted">0x00 0xFF 0xA2 0x4B ... (truncated)</span>');
-  }
-
-  async function cmd_encrypt(){
-    appendHtml('<span class="muted">Encrypting payload...</span>');
-    await sleep(300);
-    const token = btoa(Math.random().toString()).slice(0,16);
-    await typeOut('Encrypted token: ' + token, 'accent', 6);
-  }
-
-  async function cmd_js(args){
-    if(!args.length){ appendHtml('<span class="error">Usage: js &lt;word or phrase&gt;</span>'); return; }
-    // put the rest of args into snippet value
+  register('js', async (args)=>{ 
+    if(!args.length){ appendHtml('<span class="error">Usage: js &lt;text&gt;</span>'); return; }
     currentSnippet.value = args.join(' ');
-    appendHtml(`<span class="muted">Inserted into JS snippet: "</span><span class="js-str">${escapeHtml(currentSnippet.value)}</span><span class="muted">"</span>`);
-    renderSnippet();
-  }
+    appendHtml(`<span class="muted">Inserted into snippet:</span> <span class="js-str">${escapeHtml(currentSnippet.value)}</span>`);
+    renderSnippetInline();
+  }, { desc: 'Insert text into JS snippet' });
 
-  async function cmd_run(){
-    appendHtml('<span class="muted">// executing snippet...</span>');
+  register('run', async ()=>{
+    appendHtml('<span class="muted">// executing snippet</span>');
+    renderSnippetInline();
     await sleep(200);
-    // show the snippet first
-    appendHtml(`<div class="js-snippet"><span class="js-key">const</span> <span class="js-fn">${escapeHtml(currentSnippet.varName)}</span> = <span class="js-str">"${escapeHtml(currentSnippet.value)}"</span>;</div>`);
-    await sleep(200);
-    // fake result
-    await typeOut('Evaluating...', 'muted', 8);
-    await sleep(400);
-    // silly "result"
+    // simulated execution result
     const result = simulateResult(currentSnippet.value);
+    await sleep(200);
     appendHtml(`<span class="accent">> ${escapeHtml(result)}</span>`);
-  }
+  }, { desc: 'Execute current JS snippet (simulated)' });
 
-  // Simulated JS result: produce different outputs based on input for fun
+  register('copy', async ()=>{ 
+    const js = `const ${currentSnippet.varName} = "${currentSnippet.value}";`;
+    try { await navigator.clipboard.writeText(js); appendHtml('<span class="muted">Snippet copied to clipboard.</span>'); }
+    catch(e){ appendHtml('<span class="error">Clipboard not available.</span>'); }
+  }, { desc:'Copy JS snippet to clipboard' });
+
+  register('scan', async ()=>{
+    appendHtml(`${ts()}Scanning local network...`,'muted');
+    await progressBar(900);
+    appendHtml('<span class="muted">Hosts found: 4</span>');
+    appendHtml('<span class="muted">- 192.168.0.7 (ssh)</span>');
+    appendHtml('<span class="muted">- 192.168.0.21 (http)</span>');
+    appendHtml('<span class="muted">- 10.0.0.4 (db)</span>');
+  }, { desc:'Fake network scan' });
+
+  register('nmap', async (args)=>{
+    appendHtml(`${ts()}nmap 7.80 scan simulation...`,'muted');
+    await progressBar(800);
+    appendHtml('<span class="muted">22/tcp open ssh</span>');
+    appendHtml('<span class="muted">80/tcp open http</span>');
+    appendHtml('<span class="muted">3306/tcp open mysql</span>');
+  }, { desc:'Simulated port scan' });
+
+  register('connect', async (args)=>{
+    const host = args[0]||'10.0.0.4';
+    appendHtml(`${ts()}Attempting connection to ${escapeHtml(host)}...`,'muted');
+    await sleep(500);
+    appendHtml('<span class="muted">Connection established (simulated).</span>');
+  }, { desc:'Fake connect to host' });
+
+  register('ssh', async (args)=>{
+    const target = args[0]||'192.168.0.7';
+    appendHtml(`${ts()}ssh ${escapeHtml(target)} ...`,'muted');
+    await sleep(800);
+    appendHtml('<span class="muted">password prompt (simulated):</span> <span class="error">root@host password:</span>');
+    await sleep(400);
+    appendHtml('<span class="muted">authentication bypassed (simulation)</span>');
+  }, { desc:'Simulate SSH session' });
+
+  register('ping', async (args)=>{
+    const host = args[0]||'8.8.8.8';
+    for(let i=0;i<4;i++){ await sleep(180); appendHtml(`<span class="muted">Reply from ${host}: bytes=32 time=${Math.floor(10+Math.random()*100)}ms TTL=64</span>`); }
+    appendHtml('<span class="muted">Ping statistics: 4 sent, 4 received, 0% loss</span>');
+  }, { desc:'Simulate ping' });
+
+  register('traceroute', async (args)=>{
+    appendHtml(`${ts()}traceroute to ${args[0]||'example.com'} (simulated)`,'muted');
+    await progressBar(700);
+    appendHtml('<span class="muted">1 192.168.0.1 1 ms</span>');
+    appendHtml('<span class="muted">2 10.0.0.1 5 ms</span>');
+    appendHtml('<span class="muted">3 72.14.205.121 54 ms</span>');
+  }, { desc:'Simulate traceroute' });
+
+  register('whoami', async ()=>{ appendHtml('<span class="muted">root</span>'); }, { desc:'Show current user' });
+
+  register('id', async ()=>{ appendHtml('<span class="muted">uid=0(root) gid=0(root) groups=0(root)</span>'); }, { desc:'Show fake user id' });
+
+  register('ps', async ()=>{ appendHtml('<span class="muted">PID   CMD</span>'); appendHtml('<span class="muted">1 init</span>'); appendHtml('<span class="muted">1023 neon-node</span>'); }, { desc:'Show fake process list' });
+
+  register('top', async ()=>{ appendHtml('<span class="muted">top - 00:00:01 up 1 day,  1 user,  load average: 0.02, 0.03, 0.05</span>'); appendHtml('<span class="muted">Tasks: 57 total, 1 running</span>'); }, { desc:'Show fake top' });
+
+  register('netstat', async ()=>{ appendHtml('<span class="muted">Proto Recv-Q Send-Q Local Address State</span>'); appendHtml('<span class="muted">tcp 0 0 0.0.0.0:22 LISTEN</span>'); }, { desc:'Show fake netstat' });
+
+  register('ifconfig', async ()=>{ appendHtml('<span class="muted">eth0: flags=4163<UP,BROADCAST> inet 192.168.0.21 netmask 255.255.255.0</span>'); }, { desc:'Show fake network interfaces' });
+
+  register('arp', async ()=>{ appendHtml('<span class="muted">IP address       HWtype  HWaddress           Flags Mask Iface</span>'); appendHtml('<span class="muted">192.168.0.1      ether   aa:bb:cc:dd:ee:ff   C                     eth0</span>'); }, { desc:'Show fake ARP table' });
+
+  register('route', async ()=>{ appendHtml('<span class="muted">Kernel IP routing table</span>'); appendHtml('<span class="muted">Destination Gateway Genmask Flags Metric Ref Use Iface</span>'); }, { desc:'Simulate route table' });
+
+  register('grep', async (args)=>{ appendHtml(`<span class="muted">Searching logs for "${escapeHtml(args.join(' '))}" ...</span>`); await sleep(300); appendHtml('<span class="muted">Found 3 matches (simulated)</span>'); }, { desc:'Fake grep' });
+
+  register('cat', async (args)=>{ if(!args[0]) return appendHtml('<span class="error">Usage: cat &lt;file&gt;</span>'); appendHtml(`<span class="muted">--- start ${escapeHtml(args[0])} ---</span>`); appendHtml('<span class="muted">FAKE_FILE_CONTENT_LINE_1</span>'); appendHtml('<span class="muted">FAKE_FILE_CONTENT_LINE_2</span>'); appendHtml(`<span class="muted">--- end ${escapeHtml(args[0])} ---</span>`); }, { desc:'Display file (fake)' });
+
+  register('tail', async (args)=>{ appendHtml('<span class="muted">... last 10 lines (simulated)</span>'); for(let i=0;i<6;i++) appendHtml('<span class="muted">log entry '+(i+1)+'</span>'); }, { desc:'Show tail of file (fake)' });
+
+  register('passwd-dump', async ()=>{ await progressBar(800); appendHtml('<span class="muted">/etc/passwd (simulated):</span>'); appendHtml('<span class="muted">root:x:0:0:root:/root:/bin/bash</span>'); }, { desc:'Show fake passwd content' });
+
+  register('sqlmap', async (args)=>{ appendHtml('<span class="muted">Running sqlmap (simulated) against ' + (args[0]||'http://target') + '...</span>'); await progressBar(1000); appendHtml('<span class="muted">Database: users (simulated)</span>'); appendHtml('<span class="muted">user: admin | pass: ********</span>'); }, { desc:'Simulate SQL injection scan' });
+
+  register('git-clone', async (args)=>{ const repo = args[0]||'git@github.com:user/repo.git'; appendHtml(`<span class="muted">Cloning ${escapeHtml(repo)} ...</span>`); await progressBar(700); appendHtml('<span class="muted">Cloned into ./repo (simulated)</span>'); }, { desc:'Fake git clone' });
+
+  register('npm-install', async (args)=>{ appendHtml('<span class="muted">npm install ' + (args.join(' ')||'') + ' (simulated)</span>'); await progressBar(900); appendHtml('<span class="muted">Installed 12 packages (simulated)</span>'); }, { desc:'Simulate npm install' });
+
+  register('apt-get', async (args)=>{ appendHtml('<span class="muted">apt-get ' + (args.join(' ')||'') + ' (simulated)</span>'); await progressBar(900); appendHtml('<span class="muted">Operation completed (simulated)</span>'); }, { desc:'Simulate apt-get' });
+
+  register('python', async (args)=>{ appendHtml('<span class="muted">python -c "'+escapeHtml(args.join(' '))+'" (simulated)</span>'); await sleep(400); appendHtml('<span class="muted">>>> (simulated output)</span>'); }, { desc:'Simulate python execution' });
+
+  register('encode', async (args)=>{ if(!args.length) return appendHtml('<span class="error">Usage: encode base64|hex &lt;text&gt;</span>'); const mode=args[0]; const txt=args.slice(1).join(' '); if(mode==='base64') appendHtml(`<span class="muted">${btoa(txt)}</span>`); else if(mode==='hex'){ let hx=''; for(let c of txt) hx+=c.charCodeAt(0).toString(16); appendHtml(`<span class="muted">${hx}</span>`);} else appendHtml('<span class="error">Unknown encode mode</span>'); }, { desc:'Encode text' });
+
+  register('decode', async (args)=>{ if(!args.length) return appendHtml('<span class="error">Usage: decode base64|hex &lt;text&gt;</span>'); const mode=args[0]; const txt=args.slice(1).join(' '); try{ if(mode==='base64') appendHtml(`<span class="muted">${atob(txt)}</span>`); else if(mode==='hex'){ let out=''; for(let i=0;i<txt.length;i+=2) out+=String.fromCharCode(parseInt(txt.substr(i,2),16)); appendHtml(`<span class="muted">${out}</span>`)} else appendHtml('<span class="error">Unknown decode mode</span>'); }catch(e){ appendHtml('<span class="error">Decoding failed</span>'); } }, { desc:'Decode text' });
+
+  register('rot13', async (args)=>{ const text = args.join(' '); const res = text.replace(/[A-Za-z]/g, c=>String.fromCharCode((c<='Z'?90:122) >= (c=c.charCodeAt(0)+13) ? c : c-26)); appendHtml(`<span class="muted">${escapeHtml(res)}</span>`); }, { desc:'Apply ROT13' });
+
+  register('bruteforce', async (args)=>{ appendHtml('<span class="muted">Starting bruteforce (simulated)…</span>'); await progressBar(900); appendHtml('<span class="muted">Password found: hunter2 (simulated)</span>'); }, { desc:'Fake bruteforce' });
+
+  register('dump-logs', async ()=>{ appendHtml('<span class="muted">Dumping logs…</span>'); await progressBar(500); appendHtml('<span class="muted">archive.tar.gz created (simulated)</span>'); }, { desc:'Fake log dump' });
+
+  register('whois', async (args)=>{ appendHtml(`<span class="muted">Whois lookup for ${args[0]||'example.com'} (simulated)</span>`); await progressBar(600); appendHtml('<span class="muted">Registrant: ACME INC (simulated)</span>'); }, { desc:'Fake whois' });
+
+  register('dns-lookup', async (args)=>{ appendHtml(`<span class="muted">DNS lookup ${args[0]||'example.com'}</span>`); await sleep(300); appendHtml('<span class="muted">A 93.184.216.34</span>'); }, { desc:'Fake DNS lookup' });
+
+  register('smtp-test', async (args)=>{ appendHtml('<span class="muted">Connecting to smtp... (simulated)</span>'); await progressBar(700); appendHtml('<span class="muted">250 OK (simulated)</span>'); }, { desc:'Fake SMTP test' });
+
+  register('ftp', async (args)=>{ appendHtml('<span class="muted">Connecting to ftp (simulated)...</span>'); await sleep(500); appendHtml('<span class="muted">220 FTP Service ready (simulated)</span>'); }, { desc:'Fake FTP connect' });
+
+  register('spoof-ip', async (args)=>{ appendHtml('<span class="muted">Spoofing IP to ' + (args[0]||'10.0.0.123') + ' (simulated)</span>'); }, { desc:'Pretend to spoof IP' });
+
+  register('steal-cookie', async (args)=>{ appendHtml('<span class="muted">Extracting cookies (simulated)...</span>'); await progressBar(500); appendHtml('<span class="muted">session=abc123 (simulated)</span>'); }, { desc:'Fake cookie steal' });
+
+  register('banner-grab', async (args)=>{ appendHtml('<span class="muted">Grabbing banner from '+(args[0]||'192.168.0.21:80')+'</span>'); await sleep(300); appendHtml('<span class="muted">Server: nginx/1.19.0 (simulated)</span>'); }, { desc:'Grab service banner (simulated)' });
+
+  register('encrypt', async (args)=>{ appendHtml('<span class="muted">Encrypting payload...</span>'); await sleep(300); appendHtml('<span class="accent">ENCRYPTED:'+btoa(Math.random().toString()).slice(0,12)+'</span>'); }, { desc:'Fake encrypt' });
+
+  register('dump-db', async (args)=>{ appendHtml('<span class="muted">Dumping database '+(args[0]||'users')+' ...</span>'); await progressBar(900); appendHtml('<span class="muted">Exported 12345 rows (simulated)</span>'); }, { desc:'Fake DB dump' });
+
+  register('display', async (args)=>{ appendHtml('<span class="muted">' + escapeHtml(args.join(' ')) + '</span>'); }, { desc:'Display text' });
+
+  register('demo', async ()=>{ // pre-scripted demo to troll
+    const cmds = ['scan','nmap','ssh 192.168.0.7','dump','js leaked_password_123','run','encrypt','dump-db users','banner-grab 192.168.0.21:80'];
+    for(const c of cmds){ await handleCommand(c); await sleep(300); }
+  }, { desc:'Run a demo hacking sequence' });
+
+  // small hidden fun commands
+  register('fortune', async ()=>{ const f=['You will find a bug tomorrow.','42','The code compiles, but is it art?']; appendHtml('<span class="muted">'+f[Math.floor(Math.random()*f.length)]+'</span>'); }, { desc:'Fortune (fun)' });
+
+  register('exit', async ()=>{ appendHtml('<span class="muted">Closing session (simulated)</span>'); });
+
+  // ---- helpers & executor ----
   function simulateResult(input){
     input = String(input).trim();
     if(!input) return 'undefined';
     if(/pass|key|secret/i.test(input)) return '***REDACTED***';
     if(/\d{4,}/.test(input)) return 'Numeric hash: 0x' + Math.abs(hashCode(input)).toString(16).slice(0,12);
     if(input.length < 4) return 'ok';
-    // else produce a pseudo-hash
     return 'ok - ' + btoa(input).slice(0,12);
   }
   function hashCode(s){ let h=0; for(let i=0;i<s.length;i++) h=((h<<5)-h)+s.charCodeAt(i)|0; return h; }
 
-  // Fire when user enters a command
   async function handleCommand(line){
     if(!line.trim()) return;
-    appendHtml(`<span class="muted">root@host:~$</span> <span class="accent">${escapeHtml(line)}</span>`);
+    appendHtml(`<span class="muted">${ts()}</span><span class="accent">${escapeHtml(line)}</span>`);
     const parts = line.trim().split(/\s+/);
     const cmd = parts[0].toLowerCase();
     const args = parts.slice(1);
 
-    switch(cmd){
-      case 'help': await cmd_help(); break;
-      case 'scan': await cmd_scan(); break;
-      case 'connect': await cmd_connect(); break;
-      case 'dump': await cmd_dump(); break;
-      case 'encrypt': await cmd_encrypt(); break;
-      case 'js': await cmd_js(args); break;
-      case 'run': await cmd_run(); break;
-      case 'clear': screen.innerHTML=''; break;
-      case 'exit':
-        appendHtml('<span class="muted">Closing session...</span>');
-        await sleep(300);
-        appendHtml('<span class="muted">Goodbye.</span>');
-        break;
-      default:
-        appendHtml(`<span class="error">Unknown command: ${escapeHtml(cmd)} — type <span class="kbd">help</span></span>`);
+    if(cmdRegistry[cmd]) {
+      try { await cmdRegistry[cmd].fn(args); }
+      catch(e){ appendHtml('<span class="error">Command error (simulated)</span>'); }
+    } else {
+      appendHtml(`<span class="error">Unknown command: ${escapeHtml(cmd)} — type <span class="kbd">help</span></span>`);
     }
   }
 
-  // Input interactions and history
-  input.addEventListener('keydown', async (e) => {
+  // input handling
+  input.addEventListener('keydown', async (e)=>{
     if(e.key === 'Enter'){
       const txt = input.value;
       history.push(txt);
       histPos = history.length;
       input.value='';
       await handleCommand(txt);
+      screen.scrollTop = screen.scrollHeight;
     } else if(e.key === 'ArrowUp'){
       if(history.length===0) return;
       histPos = Math.max(0, (histPos===-1?history.length:histPos)-1);
       input.value = history[histPos] || '';
-      // move cursor end
       setTimeout(()=> input.setSelectionRange(input.value.length,input.value.length),0);
     } else if(e.key === 'ArrowDown'){
       if(history.length===0) return;
@@ -316,31 +345,32 @@
     }
   });
 
-  helpBtn.addEventListener('click', ()=>{ handleCommand('help'); input.focus(); });
-  copyBtn.addEventListener('click', ()=>{
-    const jsText = `const ${currentSnippet.varName} = "${currentSnippet.value}";`;
-    navigator.clipboard?.writeText(jsText).then(()=> {
-      appendHtml('<span class="muted">Snippet copied to clipboard.</span>');
-    }).catch(()=> appendHtml('<span class="error">Clipboard unavailable.</span>'));
+  // toolbar actions
+  helpBtn.addEventListener('click', ()=> { handleCommand('help'); input.focus(); });
+  copyBtn.addEventListener('click', async ()=>{
+    const js = `const ${currentSnippet.varName} = "${currentSnippet.value}";`;
+    try { await navigator.clipboard.writeText(js); appendHtml('<span class="muted">Snippet copied.</span>'); } catch(e){ appendHtml('<span class="error">Clipboard unavailable.</span>'); }
     input.focus();
   });
+  fastBtn.addEventListener('click', ()=>{ fastMode = !fastMode; fastBtn.textContent = `Fast: ${fastMode?'ON':'OFF'}`; appendHtml(`<span class="muted">Fast mode ${fastMode?'enabled':'disabled'}</span>`); input.focus(); });
+  demoBtn.addEventListener('click', ()=>{ handleCommand('demo'); input.focus(); });
 
-  fastBtn.addEventListener('click', ()=>{
-    fastMode = !fastMode;
-    fastBtn.textContent = `Fast Output: ${fastMode?'ON':'OFF'}`;
-    appendHtml(`<span class="muted">Fast mode ${fastMode?'enabled':'disabled'}.</span>`);
-    input.focus();
-  });
-
-  // expose some quick demo commands on load
-  intro();
-
-  // focus input on click anywhere in console
+  // focus behaviors
   document.querySelector('.console').addEventListener('click', ()=> input.focus());
 
-  // seed with a fun default snippet
-  currentSnippet.value = 'pwned_by_you';
-  renderSnippet();
+  // initial boot & seed snippet
+  (async function boot(){
+    screen.innerHTML='';
+    await typeOut('Booting neon-node v2.0...', 'line', 6);
+    await sleep(200);
+    await typeOut('Loading kernel modules [■■■■■■■■■■■■] 100%', 'line', 6);
+    await sleep(180);
+    appendHtml('<span class="muted">System online. Welcome, operator.</span>');
+    renderSnippetInline();
+  })();
+
+  // expose to global for debugging if needed
+  window._fakeConsole = { screen, handleCommand, cmdRegistry };
 
 })();
 </script>
