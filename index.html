@@ -1,0 +1,348 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Console — root@machine</title>
+<style>
+  :root{
+    --bg:#071008;
+    --panel:#020602;
+    --green:#4dfb7b;
+    --dimgreen:#26c36a;
+    --muted:#4bff92;
+    --shadow: 0 6px 20px rgba(0,255,120,0.06);
+    --glass: rgba(255,255,255,0.02);
+  }
+  html,body{height:100%;margin:0;font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Courier New", monospace;background:
+    linear-gradient(180deg,#000814 0%, #001219 100%);}
+  .wrap{
+    display:flex;align-items:center;justify-content:center;height:100%;padding:20px;
+  }
+  .console {
+    width:100%; max-width:1100px; height:78vh;
+    background: linear-gradient(180deg, rgba(0,10,0,0.65), rgba(0,0,0,0.65));
+    border-radius:10px; padding:18px; box-sizing:border-box;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.7);
+    border: 1px solid rgba(75,255,146,0.06);
+    display:flex; flex-direction:column; overflow:hidden;
+  }
+
+  /* header */
+  .topbar { display:flex; align-items:center; gap:12px; padding:6px 10px; margin-bottom:8px; }
+  .dots { display:flex; gap:8px; }
+  .dot { width:12px; height:12px; border-radius:50%; box-shadow: 0 1px 2px rgba(0,0,0,0.6); }
+  .dot.red{ background: #ff5f56 } .dot.yellow{ background:#ffbd2e } .dot.green{ background:#27c93f }
+  .title { flex:1; text-align:center; color:var(--muted); font-weight:700; letter-spacing:1px; font-size:14px; }
+  .controls { font-size:13px; color:#89ffb6; display:flex; gap:10px; align-items:center; }
+
+  /* main area */
+  .screen {
+    background: radial-gradient(ellipse at 10% 10%, rgba(0,120,60,0.03), transparent 10%),
+                linear-gradient(180deg, rgba(0,0,0,0.25), rgba(0,0,0,0.4));
+    flex:1; border-radius:6px; padding:12px; overflow:auto; box-shadow:var(--shadow);
+    border:1px solid rgba(45,255,160,0.03);
+  }
+
+  .line { color:var(--green); font-size:13px; line-height:1.35; white-space:pre-wrap; word-break:break-word }
+  .muted { color:rgba(77,251,123,0.6) }
+  .accent { color:var(--dimgreen); font-weight:700 }
+  .error { color:#ff6b6b }
+  .js-snippet {
+    display:block; background:rgba(0,0,0,0.45); border-left:3px solid rgba(77,251,123,0.18);
+    padding:10px 12px; margin:8px 0;border-radius:6px;color:#b9f6c8;
+  }
+  .js-key { color:#8affb9; font-weight:700 }
+  .js-str { color:#c2ffdd }
+  .js-fn { color:#9df0b3 }
+
+  /* input area */
+  .prompt {
+    display:flex; gap:10px; align-items:center; padding-top:10px;
+  }
+  .prompt .user { color:var(--muted); min-width:140px; text-align:left; font-size:13px; }
+  .input-wrap { flex:1; position:relative; display:flex; }
+  .cmd {
+    width:100%; background:transparent; border:none; color:var(--green); font-size:14px; outline:none;
+    caret-color: #a7ffd0; padding:8px 10px; border-radius:6px; box-sizing:border-box;
+    box-shadow: inset 0 0 0 1px rgba(0,255,120,0.02);
+  }
+  .hint { position:absolute; right:8px; top:50%; transform:translateY(-50%); color:rgba(140,255,170,0.3); font-size:12px; pointer-events:none; }
+
+  /* small toolbar */
+  .toolbar { display:flex; gap:8px; margin-top:10px; align-items:center; }
+  .btn {
+    background:linear-gradient(180deg,#062913,#09321b); border:1px solid rgba(75,255,146,0.06);
+    color:#baffc3; padding:8px 10px; border-radius:8px; cursor:pointer; font-size:13px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.6);
+  }
+  .btn.secondary { background:transparent; border:1px solid rgba(255,255,255,0.04); color:rgba(150,255,180,0.8) }
+  .btn:active { transform:translateY(1px) }
+
+  /* small UI niceties */
+  .tiny { font-size:12px; color:rgba(150,255,180,0.7) }
+  .kbd { background:#051309; border:1px solid rgba(0,255,120,0.06); padding:4px 8px; border-radius:6px; color:#9fffbf; font-size:12px; }
+
+  /* fake CRT scanlines */
+  .screen::before {
+    content:""; position: absolute; pointer-events:none;
+    top:0; left:0; right:0; bottom:0; opacity:0.02; background-image: linear-gradient(transparent 92%, rgba(0,0,0,0.06) 93%); mix-blend-mode:overlay;
+  }
+
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="console" role="application" aria-label="Fake hacker console">
+    <div class="topbar">
+      <div class="dots"><div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div></div>
+      <div class="title">root@neon-node — /dev/terminal</div>
+      <div class="controls tiny">green-console • v1.0</div>
+    </div>
+
+    <div id="screen" class="screen" tabindex="0" aria-live="polite"></div>
+
+    <div class="prompt" aria-hidden="false">
+      <div class="user">root@host:~$</div>
+      <div class="input-wrap">
+        <input id="cmdInput" class="cmd" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="type a command — try `help`" />
+        <div class="hint">press ↵ to execute</div>
+      </div>
+    </div>
+
+    <div class="toolbar">
+      <button class="btn" id="helpBtn">Help</button>
+      <button class="btn secondary" id="copySnippetBtn">Copy JS Snippet</button>
+      <button class="btn secondary" id="fastBtn">Fast Output: OFF</button>
+      <div style="flex:1"></div>
+      <div class="tiny">Tip: type <span class="kbd">js hello</span> to insert text into JS</div>
+    </div>
+  </div>
+</div>
+
+<script>
+(() => {
+  const screen = document.getElementById('screen');
+  const input = document.getElementById('cmdInput');
+  const helpBtn = document.getElementById('helpBtn');
+  const copyBtn = document.getElementById('copySnippetBtn');
+  const fastBtn = document.getElementById('fastBtn');
+
+  // State
+  let history = [];
+  let histPos = -1;
+  let fastMode = false;
+  let currentSnippet = { varName: 'secret', value: 'top-secret' };
+
+  // Utilities
+  function appendLine(text = '', cls='line', delay=0){
+    const el = document.createElement('div');
+    el.className = cls;
+    el.textContent = text;
+    if(fastMode || delay<=0){
+      screen.appendChild(el);
+      screen.scrollTop = screen.scrollHeight;
+    } else {
+      setTimeout(()=>{ screen.appendChild(el); screen.scrollTop = screen.scrollHeight }, delay);
+    }
+    return el;
+  }
+
+  function appendHtml(html, cls='line', delay=0){
+    const el = document.createElement('div');
+    el.className = cls;
+    el.innerHTML = html;
+    if(fastMode || delay<=0){ screen.appendChild(el); screen.scrollTop = screen.scrollHeight; }
+    else { setTimeout(()=>{ screen.appendChild(el); screen.scrollTop = screen.scrollHeight }, delay); }
+    return el;
+  }
+
+  function sleep(ms){ return new Promise(res=>setTimeout(res, fastMode?10:ms)); }
+
+  // Fake typing effect
+  async function typeOut(text, cls='line', speed=8){
+    const el = document.createElement('div');
+    el.className = cls;
+    screen.appendChild(el);
+    screen.scrollTop = screen.scrollHeight;
+    for(let i=0;i<text.length;i++){
+      el.textContent += text[i];
+      await sleep(speed + (Math.random()*speed));
+    }
+    screen.scrollTop = screen.scrollHeight;
+    return el;
+  }
+
+  // Pretty JS snippet render that updates when currentSnippet changes
+  function renderSnippet(){
+    const html =
+      `<div class="js-snippet"><span class="js-key">const</span> <span class="js-fn">${escapeHtml(currentSnippet.varName)}</span> = <span class="js-str">"${escapeHtml(currentSnippet.value)}"</span>;\n` +
+      `<span class="muted">// run: type <span class="kbd">run</span></span></div>`;
+    appendHtml(html, 'line');
+  }
+
+  function escapeHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+  // Fake system intro
+  async function intro(){
+    screen.innerHTML = '';
+    await typeOut('Initializing neon-node console v1.0...', 'line', 6);
+    await sleep(300);
+    await typeOut('Loading secure modules: [ ██████████████ ] 100%', 'line', 6);
+    await sleep(250);
+    appendLine('Welcome, operator. Type help to see commands.', 'muted');
+    renderSnippet();
+  }
+
+  // Command handlers
+  async function cmd_help(){
+    appendHtml('<span class="muted">Available commands: help, scan, connect, dump, encrypt, js &lt;word&gt;, run, clear, exit</span>');
+    appendHtml('<span class="muted">Examples: <span class="kbd">js password123</span>  <span class="kbd">run</span>  <span class="kbd">scan</span></span>');
+  }
+
+  async function cmd_scan(){
+    await typeOut('Scanning network interfaces...', 'line', 7);
+    await sleep(300);
+    await typeOut('Found hosts: 3', 'muted', 6);
+    await sleep(200);
+    appendHtml('<span class="muted">[192.168.0.4]</span>');
+    appendHtml('<span class="muted">[10.0.1.12]</span>');
+    appendHtml('<span class="muted">[172.16.254.1]</span>');
+  }
+
+  async function cmd_connect(){
+    await typeOut('Attempting connection to 10.0.1.12:22 ...', 'line', 7);
+    await sleep(500);
+    await typeOut('SSH handshake complete. Authentication bypassed (simulation).', 'muted', 7);
+    await sleep(200);
+    appendHtml('<span class="muted">session@10.0.1.12$</span>');
+  }
+
+  async function cmd_dump(){
+    await typeOut('Querying memory dump...', 'line', 8);
+    await sleep(400);
+    await typeOut('Dumping block 0x' + Math.floor(Math.random()*1e8).toString(16), 'muted', 7);
+    await sleep(200);
+    appendHtml('<span class="muted">0x00 0xFF 0xA2 0x4B ... (truncated)</span>');
+  }
+
+  async function cmd_encrypt(){
+    appendHtml('<span class="muted">Encrypting payload...</span>');
+    await sleep(300);
+    const token = btoa(Math.random().toString()).slice(0,16);
+    await typeOut('Encrypted token: ' + token, 'accent', 6);
+  }
+
+  async function cmd_js(args){
+    if(!args.length){ appendHtml('<span class="error">Usage: js &lt;word or phrase&gt;</span>'); return; }
+    // put the rest of args into snippet value
+    currentSnippet.value = args.join(' ');
+    appendHtml(`<span class="muted">Inserted into JS snippet: "</span><span class="js-str">${escapeHtml(currentSnippet.value)}</span><span class="muted">"</span>`);
+    renderSnippet();
+  }
+
+  async function cmd_run(){
+    appendHtml('<span class="muted">// executing snippet...</span>');
+    await sleep(200);
+    // show the snippet first
+    appendHtml(`<div class="js-snippet"><span class="js-key">const</span> <span class="js-fn">${escapeHtml(currentSnippet.varName)}</span> = <span class="js-str">"${escapeHtml(currentSnippet.value)}"</span>;</div>`);
+    await sleep(200);
+    // fake result
+    await typeOut('Evaluating...', 'muted', 8);
+    await sleep(400);
+    // silly "result"
+    const result = simulateResult(currentSnippet.value);
+    appendHtml(`<span class="accent">> ${escapeHtml(result)}</span>`);
+  }
+
+  // Simulated JS result: produce different outputs based on input for fun
+  function simulateResult(input){
+    input = String(input).trim();
+    if(!input) return 'undefined';
+    if(/pass|key|secret/i.test(input)) return '***REDACTED***';
+    if(/\d{4,}/.test(input)) return 'Numeric hash: 0x' + Math.abs(hashCode(input)).toString(16).slice(0,12);
+    if(input.length < 4) return 'ok';
+    // else produce a pseudo-hash
+    return 'ok - ' + btoa(input).slice(0,12);
+  }
+  function hashCode(s){ let h=0; for(let i=0;i<s.length;i++) h=((h<<5)-h)+s.charCodeAt(i)|0; return h; }
+
+  // Fire when user enters a command
+  async function handleCommand(line){
+    if(!line.trim()) return;
+    appendHtml(`<span class="muted">root@host:~$</span> <span class="accent">${escapeHtml(line)}</span>`);
+    const parts = line.trim().split(/\s+/);
+    const cmd = parts[0].toLowerCase();
+    const args = parts.slice(1);
+
+    switch(cmd){
+      case 'help': await cmd_help(); break;
+      case 'scan': await cmd_scan(); break;
+      case 'connect': await cmd_connect(); break;
+      case 'dump': await cmd_dump(); break;
+      case 'encrypt': await cmd_encrypt(); break;
+      case 'js': await cmd_js(args); break;
+      case 'run': await cmd_run(); break;
+      case 'clear': screen.innerHTML=''; break;
+      case 'exit':
+        appendHtml('<span class="muted">Closing session...</span>');
+        await sleep(300);
+        appendHtml('<span class="muted">Goodbye.</span>');
+        break;
+      default:
+        appendHtml(`<span class="error">Unknown command: ${escapeHtml(cmd)} — type <span class="kbd">help</span></span>`);
+    }
+  }
+
+  // Input interactions and history
+  input.addEventListener('keydown', async (e) => {
+    if(e.key === 'Enter'){
+      const txt = input.value;
+      history.push(txt);
+      histPos = history.length;
+      input.value='';
+      await handleCommand(txt);
+    } else if(e.key === 'ArrowUp'){
+      if(history.length===0) return;
+      histPos = Math.max(0, (histPos===-1?history.length:histPos)-1);
+      input.value = history[histPos] || '';
+      // move cursor end
+      setTimeout(()=> input.setSelectionRange(input.value.length,input.value.length),0);
+    } else if(e.key === 'ArrowDown'){
+      if(history.length===0) return;
+      histPos = Math.min(history.length, histPos+1);
+      input.value = history[histPos] || '';
+      setTimeout(()=> input.setSelectionRange(input.value.length,input.value.length),0);
+    }
+  });
+
+  helpBtn.addEventListener('click', ()=>{ handleCommand('help'); input.focus(); });
+  copyBtn.addEventListener('click', ()=>{
+    const jsText = `const ${currentSnippet.varName} = "${currentSnippet.value}";`;
+    navigator.clipboard?.writeText(jsText).then(()=> {
+      appendHtml('<span class="muted">Snippet copied to clipboard.</span>');
+    }).catch(()=> appendHtml('<span class="error">Clipboard unavailable.</span>'));
+    input.focus();
+  });
+
+  fastBtn.addEventListener('click', ()=>{
+    fastMode = !fastMode;
+    fastBtn.textContent = `Fast Output: ${fastMode?'ON':'OFF'}`;
+    appendHtml(`<span class="muted">Fast mode ${fastMode?'enabled':'disabled'}.</span>`);
+    input.focus();
+  });
+
+  // expose some quick demo commands on load
+  intro();
+
+  // focus input on click anywhere in console
+  document.querySelector('.console').addEventListener('click', ()=> input.focus());
+
+  // seed with a fun default snippet
+  currentSnippet.value = 'pwned_by_you';
+  renderSnippet();
+
+})();
+</script>
+</body>
+</html>
